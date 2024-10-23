@@ -129,17 +129,14 @@ class Pendu(ctk.CTk):
         global list_word
         if game_state == "InGame":
             global lettres_trouvees
-            print(button)
             letter_in_word = list(mot_choisi.upper())
             if button in letter_in_word:
                 lettres_trouvees.append(button)
                 boutons[button].configure(fg_color="green", state="disabled")
                 self.display_correct_letters()
-                print(lettres_trouvees)
                 if set(lettres_trouvees) == set(list_word):
                     game_state = "End"
                     threading.Thread(target=self.end_game, args=("win",)).start()
-                    print("Victoire ! ct facile")
                     pass
             else:
                 boutons[button].configure(fg_color="red", state="disabled")
@@ -199,7 +196,6 @@ class Pendu(ctk.CTk):
         elif error_score == 6:
             self.error.place(x=self.x_error+115, y=self.y_error)
             self.cadavre("feet2")
-            print("Vous avez perdu la partie !")
             threading.Thread(target=self.end_game, args=("loose",)).start()
 
     def cadavre(self, part):
@@ -250,7 +246,6 @@ class Pendu(ctk.CTk):
             mot_choisi2 = ''.join(sorted(set(mot_choisi), key=mot_choisi.index))
             mot_choisi2 = mot_choisi.upper()
             list_word = list(mot_choisi2)
-            print(mot_choisi)
 
     def display_correct_letters(self):
         global mot_choisi
