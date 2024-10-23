@@ -19,6 +19,21 @@ username = ""
 highest_winrate = 0
 list_word = []
 
+def init():
+    global mot_choisi
+    global error_score
+    global lettres_trouvees
+    global boutons
+    global game_state
+    global list_word
+    mot_choisi = ""
+    error_score = 0
+    lettres_trouvees = []
+    boutons = {}
+    game_state = "null"
+    list_word = []
+
+
 class Pendu(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -49,9 +64,9 @@ class Pendu(ctk.CTk):
                     self.log_label.configure(text="Connexion en cours", text_color="green")
                     self.log_label.pack()
                     self.log_label.place(x=240, y=150)
-                    username = self.name_value
-                    if not os.path.exists(f"{playerdata_directory}\\{self.name_value}.json"):
-                        with open(f"{playerdata_directory}\\{self.name_value}.json", "w") as file:
+                    username = self.name_value.lower()
+                    if not os.path.exists(f"{playerdata_directory}\\{username}.json"):
+                        with open(f"{playerdata_directory}\\{username}.json", "w") as file:
                             data = {
                                 "wins": 0,
                                 "looses": 0,
@@ -297,18 +312,20 @@ class Pendu(ctk.CTk):
             self.text_description.place(x=230, y=85)
         with open(f"{playerdata_directory}\\{username}.json", "w") as file:
             json.dump(data, file, indent=4)
-
-
-def choose_word():
-    global mot_choisi
-    with open(f"{current_directory}\\words.txt", "r") as file: 
-        allText = file.read() 
-        words = list(map(str, allText.split()))
-        mot_choisi = random.choice(words)
-        mot_choisi = ''.join(sorted(set(mot_choisi), key=mot_choisi.index))
-        mot_choisi = mot_choisi.upper()
-        list_word = list(mot_choisi)
-        print(list_word)
+        self.play_again = ctk.CTkButton(master=self, text="Rejouer", fg_color="green", command=lambda:self.end_button("replay"), width=50)
+        self.leave = ctk.CTkButton(master=self, text="Quitter", fg_color="red", command=lambda:self.end_button("end"), width=50)
+        self.play_again.pack()
+        self.play_again.place(x=200, y=120)
+        self.leave.pack()
+        self.leave.place(x=350, y=120)
+    def end_button(self, text):
+        if text == "replay":
+            init()
+            self.clear_window()
+            self.widgets()
+            self.start_game()
+        else:
+            self.destroy()
 
 if __name__ == "__main__":
     application = Pendu()
